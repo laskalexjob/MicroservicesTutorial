@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using PlatformService.Data;
 using PlatformService.Dtos;
 using PlatformService.Models;
+using PlatformService.SyncDataServices.Http;
 
 namespace PlatformService.Controllers;
 
@@ -10,13 +11,16 @@ namespace PlatformService.Controllers;
 [Route("api/[controller]")]
 public class PlatformsController : ControllerBase
 {
+    private readonly ICommandDataClient _commandDataClient;
     private readonly IPlatformRepo _repository;
     private readonly IMapper _mapper;
 
     public PlatformsController(
+        ICommandDataClient commandDataClient,
         IPlatformRepo repository,
         IMapper mapper)
     {
+        _commandDataClient = commandDataClient;
         _repository = repository;
         _mapper = mapper;
     }
@@ -52,17 +56,17 @@ public class PlatformsController : ControllerBase
 
         var platformReadDto = _mapper.Map<PlatformReadDto>(platformModel);
 
-        //// Send Sync Message
-        //try
-        //{
-        //    await _commandDataClient.SendPlatformToCommand(platformReadDto);
-        //}
-        //catch (Exception ex)
-        //{
-        //    Console.WriteLine($"--> Could not send synchronously: {ex.Message}");
-        //}
+        // Send Sync Message
+        try
+        {
+            await _commandDataClient.SendPlatformToCommand(platformReadDto);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"--> Could not send synchronously: {ex.Message}");
+        }
 
-        ////Send Async Message
+        //// Send Async Message
         //try
         //{
         //    var platformPublishedDto = _mapper.Map<PlatformPublishedDto>(platformReadDto);
