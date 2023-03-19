@@ -28,8 +28,18 @@ https://jwt.io/
 
 KUBERNETES
 
+kubectl config get-contexts
+
+kubectl config use-context <context-name>
+
 kubectl get ingress
 
 kubectl logs -n nginx-ingress ingress-nginx-controller-6b94c75599-9zg9k  -> show logs for pod in namespace
 
 kubectl config set-context --current --namespace=ingress-nginx  -> change context ('default' is default context)
+
+kubectl.exe create secret generic mssql --from-literal=SA_PASSWORD="pa55w0rd!"
+
+kubectl.exe get pvc
+
+kubectl.exe get storageclass
